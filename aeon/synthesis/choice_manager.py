@@ -2,10 +2,6 @@ from __future__ import annotations
 
 from typing import Any
 from typing import Callable
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Type
 
 from aeon.core.types import args_size_of_type
 from aeon.synthesis.exceptions import NoMoreBudget

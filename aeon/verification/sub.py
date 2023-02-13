@@ -18,6 +18,7 @@ from aeon.verification.vcs import Constraint
 from aeon.verification.vcs import Implication
 from aeon.verification.vcs import LiquidConstraint
 
+
 ctrue = LiquidConstraint(LiquidLiteralBool(True))
 cfalse = LiquidConstraint(LiquidLiteralBool(False))
 

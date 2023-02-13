@@ -1,5 +1,4 @@
 type : "{" ID ":" type _PIPE expression "}"                -> refined_t
-     | "(" ID ":" type ")" "->" type                       -> abstraction_t
      | "forall" ID ":" kind "," type                     -> polymorphism_t
      | ID                                                  -> simple_t
      | "(" type ")"                                        -> same
@@ -57,7 +56,6 @@ expression_simple : "(" expression ")"                       -> same
              | BOOLLIT                                         -> bool_lit
              | STRINGLIT                                      -> string_lit
              | ID                                             -> var
-             | "?" ID                                         -> hole
 
 
 kind : "B" -> base_kind
@@ -70,12 +68,9 @@ STRINGLIT : ESCAPED_STRING
 
 
 ID.0 : CNAME | /\([\+=\>\<!\*\-&\|]{1,3}\)/
-PATH : (".." | ID )* "/" ID
 
 _PIPE.10 : "where" | "|"
 _DOUBLEPIPE.11 : "||"
-
-COMMENT: /\s*/ "#" /[^\n]/*
 
 %import common.ESCAPED_STRING
 %import common.WS
@@ -83,4 +78,3 @@ COMMENT: /\s*/ "#" /[^\n]/*
 %import common.SIGNED_FLOAT
 
 %ignore WS
-%ignore COMMENT
