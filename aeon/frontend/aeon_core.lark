@@ -26,7 +26,7 @@ expression_bool : expression_plus                                -> same
                 | expression_plus "<=" expression_bool             -> binop_le
                 | expression_plus ">" expression_bool             -> binop_gt
                 | expression_plus ">=" expression_bool             -> binop_ge
-                | expression_plus "-->" expression_bool             -> binop_imp
+                | expression_plus "==>" expression_bool             -> binop_imp
 
 expression_plus : expression_fact                           -> same
                 | expression_fact "+" expression_plus       -> binop_plus
@@ -39,7 +39,7 @@ expression_fact : expression_b                           -> same
 
 
 
-expression_b : "\\" ID "->" expression                      -> abstraction_e
+expression_b : "\\" ID "=>" expression                      -> abstraction_e
              | "Λ" ID ":" kind "=>" expression              -> tabstraction_e
              | application                                  -> same
 
