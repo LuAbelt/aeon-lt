@@ -15,7 +15,7 @@ from z3 import sat
 from z3 import Solver
 from z3 import unknown
 from z3 import unsat
-from z3.z3 import And
+from z3.z3 import And, Function, ArraySort
 from z3.z3 import Bool
 from z3.z3 import BoolRef
 from z3.z3 import BoolSort
@@ -67,6 +67,7 @@ base_functions: dict[str, Any] = {
     "*": lambda x, y: x * y,
     "%": lambda x, y: x % y,
     "-->": lambda x, y: Implies(x, y),
+    "len": lambda x: Function("len", ArraySort(IntSort(),IntSort()), IntSort())(x),
 }
 
 
