@@ -40,6 +40,7 @@ from aeon.core.liquid import LiquidVar
 from aeon.core.liquid_ops import mk_liquid_and
 from aeon.core.types import AbstractionType
 from aeon.core.types import BaseType
+from aeon.core.types import Type
 from aeon.core.types import t_bool
 from aeon.core.types import t_int
 from aeon.core.types import t_string
@@ -67,7 +68,7 @@ base_functions: dict[str, Any] = {
     "*": lambda x, y: x * y,
     "%": lambda x, y: x % y,
     "-->": lambda x, y: Implies(x, y),
-    "len": lambda x: Function("len", ArraySort(IntSort(),IntSort()), IntSort())(x),
+    "len": lambda x: Function("len", get_sort(TypeVar("List")), IntSort())(x),
 }
 
 
@@ -116,7 +117,8 @@ def smt_valid(c: Constraint, foralls: list[tuple[str, Any]] = []) -> bool:
     cons: list[CanonicConstraint] = list(flatten(c))
 
     forall_vars = [(f[0], make_variable(f[0], f[1])) for f in foralls
-                   if isinstance(f[1], BaseType)]
+                   if has_sort(f[1])]
+    
 
     for c in cons:
         s.push()
@@ -144,6 +146,8 @@ def type_of_variable(variables: list[tuple[str, Any]], name: str) -> Any:
 
 sort_cache = {}
 
+def has_sort(ty:Type) -> bool:
+    return isinstance(ty, BaseType) or isinstance(ty, TypeVar)
 
 def get_sort(base: BaseType) -> Any:
     if base == t_int:
@@ -152,7 +156,7 @@ def get_sort(base: BaseType) -> Any:
         return BoolSort
     elif base == t_string:
         return StringSort
-    elif isinstance(base, BaseType):
+    elif isinstance(base, BaseType) or isinstance(base, TypeVar):
         if base.name not in sort_cache:
             sort_cache[base.name] = DeclareSort(base.name)
         return sort_cache[base.name]
@@ -167,7 +171,7 @@ def make_variable(name: str, base: BaseType) -> Any:
         return Bool(name)
     elif base == t_string:
         return String(name)
-    elif isinstance(base, BaseType):
+    elif has_sort(base):
         return Const(name, get_sort(base))
 
     print("NO var:", name, base, type(base))
@@ -207,7 +211,7 @@ def translate(
 ) -> BoolRef | bool:
     variables = [(name, make_variable(name, base))
                  for (name, base) in c.binders
-                 if isinstance(base, BaseType)] + extra
+                 if has_sort(base)] + extra
     e1 = translate_liq(c.pre, variables)
     e2 = translate_liq(c.pos, variables)
     if isinstance(e1, bool) and isinstance(e2, bool):
