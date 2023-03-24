@@ -23,7 +23,6 @@ all_ops = [
     ("-", ("Int", "Int", "Int")),
     ("%", ("Int", "Int", "Int")),
     ("!", ("Bool", "Bool")),
-    ("length", ("Array", "Int")),
 ]
 
 ops = [x[0] for x in all_ops]

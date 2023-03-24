@@ -69,6 +69,8 @@ base_functions: dict[str, Any] = {
     "%": lambda x, y: x % y,
     "-->": lambda x, y: Implies(x, y),
     "len": lambda x: Function("len", get_sort(TypeVar("List")), IntSort())(x),
+    "n_rows": lambda x: Function("n_rows", get_sort(TypeVar("DataSet")), IntSort())(x),
+    "n_cols": lambda x: Function("n_cols", get_sort(TypeVar("DataSet")), IntSort())(x),
 }
 
 
@@ -118,7 +120,7 @@ def smt_valid(c: Constraint, foralls: list[tuple[str, Any]] = []) -> bool:
 
     forall_vars = [(f[0], make_variable(f[0], f[1])) for f in foralls
                    if has_sort(f[1])]
-    
+
 
     for c in cons:
         s.push()
